@@ -1,0 +1,1 @@
+./matc -a opengl -p mobile -o textured.filamat transparentColor.mat
