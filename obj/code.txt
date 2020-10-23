@@ -1,0 +1,1 @@
+./filamesh --compress monkey.obj suzanne.filamesh

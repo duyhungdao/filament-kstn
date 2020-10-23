@@ -4,7 +4,7 @@ const texture_suffix = Filament.getSupportedFormatSuffix('etc');
 
 const environ = 'venetian_crossroads_2k'
 const ibl_url = `_ibl.ktx`;
-const sky_small_url = `_skybox_tiny.ktx`;
+const sky_small_url = `_skybox.ktx`;
 const sky_large_url = `_skybox.ktx`;
 const albedo_url = `albedo${albedo_suffix}.ktx`;
 const ao_url = `ao${texture_suffix}.ktx`;
@@ -29,7 +29,8 @@ class App {
 	
         const filamesh = this.engine.loadFilamesh(filamesh_url, this.matinstance);
         this.suzanne = filamesh.renderable;
-const red = [0.0, 0.8, 0.0];
+// COLOR
+const red = [0.0, 0.0, 0.2];
 	this.matinstance.setColor3Parameter('baseColor', Filament.RgbType.sRGB, red);
 
         // TODO: create sky box and IBL
@@ -79,7 +80,8 @@ this.trackball = new Trackball(canvas, {startSpin: 0});
         this.resize = this.resize.bind(this);
         window.addEventListener('resize', this.resize);
 
-        //const eye = [-60, -40, 10], center = [0, 0, 0], up = [0, -4, 12];
+        //const eye = [-60, -40, 10], center = [0, 0, 0], up = [0, -4, 12]; dog
+	//  const eye = [7, 0, 0], center = [0, 0, 0], up = [0, 1, 0]; panda 
         //this.camera.lookAt(eye, center, up);
 
         this.resize();
@@ -93,9 +95,9 @@ this.trackball = new Trackball(canvas, {startSpin: 0});
 //tcm.setTransform(inst, this.trackball.getMatrix());
 //inst.delete();
 //////////////////
-    const eye = [-60, -40, 0], center = [0, 0, 0], up = [0, -4, 12];
+    const eye = [7, 0, 0], center = [0, 0, 0], up = [0, 1, 0];
     const radians = Date.now() / 5000;
-    vec3.rotateZ(eye, eye, center, radians);
+    vec3.rotateY(eye, eye, center, radians);
     this.camera.lookAt(eye, center, up);
         this.renderer.render(this.swapChain, this.view);
         window.requestAnimationFrame(this.render);
@@ -109,6 +111,7 @@ this.trackball = new Trackball(canvas, {startSpin: 0});
 
         const aspect = width / height;
         const Fov = Filament.Camera$Fov, fov = aspect < 1 ? Fov.HORIZONTAL : Fov.VERTICAL;
-        this.camera.setProjectionFov(100, aspect, 1, 1000, fov);
+        this.camera.setProjectionFov(45, aspect, 0.1, 100, fov); //100 - 1 -1000 dog
+//this.camera.setProjectionFov(45, aspect, 0.1, 100, fov); panda
     }
 }

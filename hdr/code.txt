@@ -1,4 +1,4 @@
-./cmgen -x . --format=ktx --size=64 --extract-blur=0.01 lightroom_14b.hdr
+./cmgen -x . --format=ktx --size=64 --extract-blur=0.01 graffiti_shelter_2k.hdr
 mv _skybox.ktx _skybox_tiny.ktx
-./cmgen -x . --format=ktx --size=256 --extract-blur=0.01 lightroom_14b.hdr
+./cmgen -x . --format=ktx --size=256 --extract-blur=0.01 graffiti_shelter_2k.hdr
 
