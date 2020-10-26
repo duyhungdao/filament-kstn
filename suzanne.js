@@ -30,7 +30,7 @@ class App {
         const filamesh = this.engine.loadFilamesh(filamesh_url, this.matinstance);
         this.suzanne = filamesh.renderable;
 // COLOR
-const red = [0.0, 0.0, 0.2];
+const red = [0.2, 0.2, 0.2];
 	this.matinstance.setColor3Parameter('baseColor', Filament.RgbType.sRGB, red);
 
         // TODO: create sky box and IBL
@@ -95,7 +95,7 @@ this.trackball = new Trackball(canvas, {startSpin: 0});
 //tcm.setTransform(inst, this.trackball.getMatrix());
 //inst.delete();
 //////////////////
-    const eye = [7, 0, 0], center = [0, 0, 0], up = [0, 1, 0];
+    const eye = [500, 200, 0], center = [0, 0, 0], up = [0, 1, 0];
     const radians = Date.now() / 5000;
     vec3.rotateY(eye, eye, center, radians);
     this.camera.lookAt(eye, center, up);
@@ -111,7 +111,7 @@ this.trackball = new Trackball(canvas, {startSpin: 0});
 
         const aspect = width / height;
         const Fov = Filament.Camera$Fov, fov = aspect < 1 ? Fov.HORIZONTAL : Fov.VERTICAL;
-        this.camera.setProjectionFov(45, aspect, 0.1, 100, fov); //100 - 1 -1000 dog
+        this.camera.setProjectionFov(60, aspect, 0.01, 1000, fov); //100 - 1 -1000 dog
 //this.camera.setProjectionFov(45, aspect, 0.1, 100, fov); panda
     }
 }
