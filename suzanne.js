@@ -6,11 +6,11 @@ const environ = 'venetian_crossroads_2k'
 const ibl_url = `_ibl.ktx`;
 const sky_small_url = `_skybox.ktx`;
 const sky_large_url = `_skybox.ktx`;
-const albedo_url = `albedo${albedo_suffix}.ktx`;
-const ao_url = `ao${texture_suffix}.ktx`;
-const metallic_url = `metallic${texture_suffix}.ktx`;
-const normal_url = `normal${texture_suffix}.ktx`;
-const roughness_url = `roughness${texture_suffix}.ktx`;
+//const albedo_url = `albedo${albedo_suffix}.ktx`;
+//const ao_url = `ao${texture_suffix}.ktx`;
+//const metallic_url = `metallic${texture_suffix}.ktx`;
+//const normal_url = `normal${texture_suffix}.ktx`;
+//const roughness_url = `roughness${texture_suffix}.ktx`;
 const filamat_url = 'textured.filamat';
 const filamesh_url = 'suzanne.filamesh';
 
@@ -41,23 +41,23 @@ this.indirectLight.setIntensity(100000);
 this.scene.setIndirectLight(this.indirectLight);
 
 	// TODO: Fetch asset asychronously // TODO: fetch larger assets
-Filament.fetch([sky_large_url, albedo_url, roughness_url, metallic_url, normal_url, ao_url], () => {
-    const albedo = this.engine.createTextureFromKtx(albedo_url, {srgb: true});
-    const roughness = this.engine.createTextureFromKtx(roughness_url);
-    const metallic = this.engine.createTextureFromKtx(metallic_url);
-    const normal = this.engine.createTextureFromKtx(normal_url);
-    const ao = this.engine.createTextureFromKtx(ao_url);
+Filament.fetch([sky_large_url], () => {
+//    const albedo = this.engine.createTextureFromKtx(albedo_url, {srgb: true});
+//    const roughness = this.engine.createTextureFromKtx(roughness_url);
+//    const metallic = this.engine.createTextureFromKtx(metallic_url);
+//    const normal = this.engine.createTextureFromKtx(normal_url);
+//    const ao = this.engine.createTextureFromKtx(ao_url);
 
-    const sampler = new Filament.TextureSampler(
-        Filament.MinFilter.LINEAR_MIPMAP_LINEAR,
-        Filament.MagFilter.LINEAR,
-        Filament.WrapMode.CLAMP_TO_EDGE);
+ //   const sampler = new Filament.TextureSampler(
+ //       Filament.MinFilter.LINEAR_MIPMAP_LINEAR,
+ //       Filament.MagFilter.LINEAR,
+ //       Filament.WrapMode.CLAMP_TO_EDGE);
 
-    this.matinstance.setTextureParameter('albedo', albedo, sampler);
-    this.matinstance.setTextureParameter('roughness', roughness, sampler);
-    this.matinstance.setTextureParameter('metallic', metallic, sampler);
-    this.matinstance.setTextureParameter('normal', normal, sampler);
-    this.matinstance.setTextureParameter('ao', ao, sampler);
+ //   this.matinstance.setTextureParameter('albedo', albedo, sampler);
+ //   this.matinstance.setTextureParameter('roughness', roughness, sampler);
+ //   this.matinstance.setTextureParameter('metallic', metallic, sampler);
+ //   this.matinstance.setTextureParameter('normal', normal, sampler);
+ //   this.matinstance.setTextureParameter('ao', ao, sampler);
 
     // Replace low-res skybox with high-res skybox.
     this.engine.destroySkybox(this.skybox);
@@ -96,8 +96,6 @@ this.trackball = new Trackball(canvas, {startSpin: 0});
 //inst.delete();
 //////////////////
         const radianss =  Date.now() / 300;
-        //this.trackball = new Trackball(this.canvas);
-        // Tao vecto v de vat the chuyen dong theo duong cheo
         const a = (radianss%8)<4?radianss%8:-8+radianss%8;
         const v = ((4+radianss)%16)<8?[0,0,a*150]:[0,0,a*150];
 
