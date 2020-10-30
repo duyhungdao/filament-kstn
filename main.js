@@ -9,19 +9,25 @@ const environ = 'venetian_crossroads_2k'
 const ibl_url = `_ibl.ktx`;
 const sky_small_url = `_skybox.ktx`;
 const sky_large_url = `_skybox.ktx`;
+//ultimate
+const ao_url = `ao${texture_suffix}.ktx`;
 
 const filamat_url = 'textured.filamat';
+const filamat2_url = 'textured2.filamat';
 //khai bao url cho obj
 const filamesh_url = 'suzanne.filamesh';
 const filamesh2_url = 'suzanne2.filamesh';
-const filamesh3_url = 'suzanne2.filamesh';
+const filamesh3_url = 'suzanne3.filamesh';
+const filamesh4_url = 'suzanne4.filamesh';
 const start = Date.now();
 
 //khoi tao
 Filament.init([ filamat_url, 
+		filamat2_url,
 		filamesh_url, 
 		filamesh2_url, 
 		filamesh3_url, 
+		filamesh4_url, 
 		sky_small_url, ibl_url ], () => {
     window.app = new App(document.getElementsByTagName('canvas')[0]);
 });
@@ -32,11 +38,13 @@ class App {
         this.engine = Filament.Engine.create(canvas);
         this.scene = this.engine.createScene();
                 
-	const material = this.engine.createMaterial(filamat_url);
+	const material  = this.engine.createMaterial(filamat_url);
+	const material2 = this.engine.createMaterial(filamat2_url);
 	//Khai bao lop material        
 	this.matinstance = material.createInstance();
 	this.matinstance2 = material.createInstance();
 	this.matinstance3 = material.createInstance();
+	this.matinstance4 = material2.createInstance();
 	//khai bao obj 1
         const filamesh = this.engine.loadFilamesh(filamesh_url, this.matinstance);
         this.suzanne = filamesh.renderable;
@@ -46,6 +54,9 @@ class App {
         //khai bao obj 3
         const filamesh3 = this.engine.loadFilamesh(filamesh3_url, this.matinstance3);
 	this.suzanne3 = filamesh3.renderable;
+	//obj 4
+	const filamesh4 = this.engine.loadFilamesh(filamesh4_url, this.matinstance4);
+	this.suzanne4 = filamesh4.renderable;
 	// Khai bao mau sac
 	const color1 = [0.14, 0.13, 0.13];
 	const color2 = [0.24, 0.24, 0.24];
@@ -62,7 +73,16 @@ class App {
 	this.scene.setIndirectLight(this.indirectLight);
 
 	// TODO: Fetch asset asychronously // TODO: fetch larger assets
-	Filament.fetch([sky_large_url], () => {
+	Filament.fetch([sky_large_url, ao_url], () => {
+	const ao = this.engine.createTextureFromKtx(ao_url);
+
+    	const sampler = new Filament.TextureSampler(
+        Filament.MinFilter.LINEAR_MIPMAP_LINEAR,
+        Filament.MagFilter.LINEAR,
+        Filament.WrapMode.CLAMP_TO_EDGE);
+
+   	this.matinstance4.setTextureParameter('ao', ao, sampler);
+
     	// Replace low-res skybox with high-res skybox.
     	this.engine.destroySkybox(this.skybox);
     	this.skybox = this.engine.createSkyFromKtx(sky_large_url);
@@ -71,6 +91,7 @@ class App {
     	this.scene.addEntity(this.suzanne);
    	this.scene.addEntity(this.suzanne2);
 	this.scene.addEntity(this.suzanne3);
+	this.scene.addEntity(this.suzanne4);
 });
         // TODO: initialize gltumble
 	this.trackball = new Trackball(canvas, {startSpin: 0});       
@@ -104,9 +125,9 @@ class App {
 	const radians = Date.now() / 5000;
 	const center = [0, 0, 0], up = [0, 1, 0];
 	var eye;
-	var transform, transform2, transform3;
-	var tcm, tcm2, tcm3;
-	var inst, inst2, inst3;
+	var transform, transform2, transform3, transform4;
+	var tcm, tcm2, tcm3, tcm4;
+	var inst, inst2, inst3, inst4;
 	var radrotate = Date.now()%7200;
 	var q = quat.fromEuler(quat.create(),0,0,360/7200*radrotate);	
 	
@@ -138,6 +159,11 @@ class App {
 		inst3 = tcm3.getInstance(this.suzanne3);
 		tcm3.setTransform(inst3, transform3);	
 
+		transform4 = mat4.fromTranslation(mat4.create(), [100,100,100])
+		tcm4 = this.engine.getTransformManager();
+		inst4 = tcm4.getInstance(this.suzanne4);
+		tcm4.setTransform(inst4, transform4);	
+
 		eye = e1;
 		this.camera.lookAt(eye, center, up);
 
@@ -161,6 +187,11 @@ class App {
 		tcm3 = this.engine.getTransformManager();
 		inst3 = tcm3.getInstance(this.suzanne3);
 		tcm3.setTransform(inst3, transform3);	
+
+		transform4 = mat4.fromTranslation(mat4.create(), [100,100,100])
+		tcm4 = this.engine.getTransformManager();
+		inst4 = tcm4.getInstance(this.suzanne4);
+		tcm4.setTransform(inst4, transform4);	
 		
 		eye = e2;
 		vec3.rotateY(eye, eye, center, radians);
@@ -183,7 +214,12 @@ class App {
 		transform3 = mat4.fromTranslation(mat4.create(), v3)
 		tcm3 = this.engine.getTransformManager();
 		inst3 = tcm3.getInstance(this.suzanne3);
-		tcm3.setTransform(inst3, transform3);	
+		tcm3.setTransform(inst3, transform3);
+
+		transform4 = mat4.fromTranslation(mat4.create(), [100,100,100])
+		tcm4 = this.engine.getTransformManager();
+		inst4 = tcm4.getInstance(this.suzanne4);
+		tcm4.setTransform(inst4, transform4);		
 
 		eye = (time < 8000)? e3:e4;
 		vec3.rotateY(eye, eye, center, radians);
@@ -192,8 +228,8 @@ class App {
 	else if( count > 45000 && count <60000)
 	{	
 		this.matinstance.setColor3Parameter('baseColor', Filament.RgbType.sRGB, [0.2,0,0]);
-		this.matinstance2.setColor3Parameter('baseColor', Filament.RgbType.sRGB, [0.2,0.2,0]);
-		this.matinstance3.setColor3Parameter('baseColor', Filament.RgbType.sRGB, [0.2,0.2,0]);
+		this.matinstance2.setColor3Parameter('baseColor', Filament.RgbType.sRGB, [0,0,0.2]);
+		this.matinstance3.setColor3Parameter('baseColor', Filament.RgbType.sRGB, [0,0,0.2]);
 		
 		const s = [3,3,3];
 		q = quat.fromEuler(quat.create(),0,0,0);	
@@ -212,6 +248,11 @@ class App {
 		inst3 = tcm3.getInstance(this.suzanne3);
 		tcm3.setTransform(inst3, transform3);	
 
+		transform4 = mat4.fromTranslation(mat4.create(), [100,100,100])
+		tcm4 = this.engine.getTransformManager();
+		inst4 = tcm4.getInstance(this.suzanne4);
+		tcm4.setTransform(inst4, transform4);	
+
 		eye = [0,8,4];
 		vec3.rotateY(eye, eye, center, radians);
 		this.camera.lookAt(eye, center, up);
@@ -219,11 +260,12 @@ class App {
 	}
 	else if (count > 60000)
 	{
-		this.matinstance.setColor3Parameter('baseColor', Filament.RgbType.sRGB, [0,0,0.1]);
-		transform = mat4.fromScaling(mat4.create(), [4, 4, 4]);
-		tcm = this.engine.getTransformManager();
-		inst = tcm.getInstance(this.suzanne);
-    		tcm.setTransform(inst, transform);
+
+
+		transform4 = mat4.fromScaling(mat4.create(), [4, 4, 4]);
+		tcm4 = this.engine.getTransformManager();
+		inst4 = tcm4.getInstance(this.suzanne4);
+    		tcm4.setTransform(inst4, transform4);
 
 		transform2 = mat4.fromTranslation(mat4.create(), [100,100,100])
 		tcm2 = this.engine.getTransformManager();
@@ -234,6 +276,11 @@ class App {
 		tcm3 = this.engine.getTransformManager();
 		inst3 = tcm3.getInstance(this.suzanne3);
 		tcm3.setTransform(inst3, transform3);	
+
+		transform = mat4.fromTranslation(mat4.create(), [100,100,100])
+		tcm = this.engine.getTransformManager();
+		inst = tcm.getInstance(this.suzanne);
+		tcm.setTransform(inst, transform);	
 		
 		eye = [0,8,4];
 		vec3.rotateZ(eye, eye, center, radians);
