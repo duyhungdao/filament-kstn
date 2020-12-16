@@ -1,0 +1,17 @@
+material {
+    name : textured,
+    requires : [ uv0 ],
+    shadingModel : lit,
+    parameters : [
+        { type : sampler2d, name : albedo },
+	{ type : sampler2d, name : ao }
+    ],
+}
+
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        material.baseColor = texture(materialParams_albedo, getUV0());
+	material.ambientOcclusion = texture(materialParams_ao, getUV0()).r;
+    }
+}

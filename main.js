@@ -11,6 +11,7 @@ const sky_small_url = `_skybox.ktx`;
 const sky_large_url = `_skybox.ktx`;
 //ultimate
 const ao_url = `ao${texture_suffix}.ktx`;
+const albedo_url = `albedo${albedo_suffix}.ktx`;
 
 const filamat_url = 'textured.filamat';
 const filamat2_url = 'textured2.filamat';
@@ -73,16 +74,17 @@ class App {
 	this.scene.setIndirectLight(this.indirectLight);
 
 	// TODO: Fetch asset asychronously // TODO: fetch larger assets
-	Filament.fetch([sky_large_url, ao_url], () => {
+	Filament.fetch([sky_large_url, albedo_url, ao_url], () => {
+	//const albedo = this.engine.createTextureFromKtx(albedo_url);
 	const ao = this.engine.createTextureFromKtx(ao_url);
-
-    	const sampler = new Filament.TextureSampler(
+    	
+	const sampler = new Filament.TextureSampler(
         Filament.MinFilter.LINEAR_MIPMAP_LINEAR,
         Filament.MagFilter.LINEAR,
         Filament.WrapMode.CLAMP_TO_EDGE);
 
-   	this.matinstance4.setTextureParameter('ao', ao, sampler);
-
+   	//this.matinstance4.setTextureParameter('albedo', albedo, sampler);
+	this.matinstance4.setTextureParameter('ao', ao, sampler);
     	// Replace low-res skybox with high-res skybox.
     	this.engine.destroySkybox(this.skybox);
     	this.skybox = this.engine.createSkyFromKtx(sky_large_url);
@@ -159,7 +161,7 @@ class App {
 		inst3 = tcm3.getInstance(this.suzanne3);
 		tcm3.setTransform(inst3, transform3);	
 
-		transform4 = mat4.fromTranslation(mat4.create(), [100,100,100])
+		transform4 = mat4.fromTranslation(mat4.create(), [1000,1000,1000])
 		tcm4 = this.engine.getTransformManager();
 		inst4 = tcm4.getInstance(this.suzanne4);
 		tcm4.setTransform(inst4, transform4);	
